@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- You can replace vite.svg with your own favicon link -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      window.addEventListener('error', function(e) {
+        console.error('Global error:', e);
+        document.getElementById('root').innerHTML = `
+          <div style="
+            padding: 20px;
+            margin: 20px;
+            background: #ef4444;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            font-family: system-ui, -apple-system, sans-serif;
+          ">
+            <h2>Something went wrong</h2>
+            <p>Please try refreshing the page. If the problem persists, check the console for more details.</p>
+          </div>
+        `;
+      });
+    </script>
+  </body>
+</html>

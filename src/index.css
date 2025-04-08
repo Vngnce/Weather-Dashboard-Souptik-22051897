@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional: Add custom base styles or layers */
+body {
+  @apply bg-gray-100 font-sans antialiased;
+}
+
+/* Ensure the body/html take full height for gradient background */
+html, body, #root {
+  height: 100%;
+}
+
+/*
+  If you defined animations in tailwind.config.js, you don't need this layer.
+  If you prefer defining them here:
+*/
+/* @layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+} */
