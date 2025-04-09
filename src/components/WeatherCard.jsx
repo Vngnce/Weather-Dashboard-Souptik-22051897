@@ -3,30 +3,28 @@ import React, { useState } from 'react';
 function WeatherCard({ data, isDarkMode, onRefresh }) {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Perform robust check for necessary data points
+  // Validate required data
   if (!data || !data.main || !data.weather || !data.weather[0] || !data.wind || !data.sys) {
-     console.error("WeatherCard received invalid or incomplete data:", data);
-     // Return null or a minimal error message instead of crashing
      return <div className="text-center text-red-600 p-4 animate-fadeIn">Weather data unavailable.</div>;
    }
 
-  // Destructure with defaults for robustness, although checks above should prevent issues
+  // Extract data with fallbacks
   const { name = 'Unknown Location', main = {}, weather = [{}], wind = {}, sys = {} } = data;
 
-  // Extract and format data points, providing fallbacks
-  const temp = Math.round(main.temp ?? 'N/A'); // Using nullish coalescing
+  // Format weather data
+  const temp = Math.round(main.temp ?? 'N/A');
   const feelsLike = Math.round(main.feels_like ?? 'N/A');
   const humidity = main.humidity ?? 'N/A';
-  const windSpeed = wind.speed !== undefined ? wind.speed.toFixed(1) : 'N/A'; // Check for undefined explicitly
+  const windSpeed = wind.speed !== undefined ? wind.speed.toFixed(1) : 'N/A';
   const description = weather[0]?.description || 'No description';
   const mainWeather = weather[0]?.main || '';
   const iconCode = weather[0]?.icon;
-  const country = sys.country || ''; // Country code might be optional
+  const country = sys.country || '';
 
-  // Construct icon URL using HTTPS and larger icon size
-  const iconUrl = iconCode ? `https://openweathermap.org/img/wn/${iconCode}@4x.png` : ''; // Use @4x for higher resolution
+  // Weather icon URL
+  const iconUrl = iconCode ? `https://openweathermap.org/img/wn/${iconCode}@4x.png` : '';
 
-  // Capitalize the first letter of each word in the description
+  // Format description
   const capitalizedDescription = description
       .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -36,13 +34,11 @@ function WeatherCard({ data, isDarkMode, onRefresh }) {
     if (isRefreshing) return;
     setIsRefreshing(true);
     await onRefresh?.();
-    setTimeout(() => setIsRefreshing(false), 1000); // Minimum animation time
+    setTimeout(() => setIsRefreshing(false), 1000);
   };
 
   return (
-    // Added animation classes for a more dynamic appearance
     <div className={`bg-white bg-opacity-75 backdrop-blur-lg rounded-xl shadow-2xl p-4 sm:p-6 w-full max-w-md animate-fadeIn transition-all duration-500 transform hover:shadow-3xl hover:scale-[1.02] ${isDarkMode ? 'bg-gray-800 bg-opacity-80 text-gray-100' : 'text-gray-900'}`}>
-      {/* Location with Refresh Button */}
       <div className="flex items-center justify-between mb-2">
         <h2 className={`text-xl sm:text-2xl md:text-3xl font-bold text-center flex-grow animate-fadeInDown transition-transform duration-300 hover:scale-[1.03] ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
           {name}{country ? `, ${country}` : ''}
@@ -76,17 +72,15 @@ function WeatherCard({ data, isDarkMode, onRefresh }) {
         </button>
       </div>
 
-      {/* Main Weather Info: Icon, Temp, Description */}
       <div className="flex flex-col items-center text-center my-3 sm:my-4">
          {iconUrl && (
            <img
              src={iconUrl}
              alt={mainWeather}
-             // Larger icon size
              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 -mt-1 -mb-1 sm:-mt-2 sm:-mb-2 animate-bounce-subtle transition-transform duration-300 hover:scale-110"
-             width="96" // Match dimensions for layout stability
+             width="96"
              height="96"
-             loading="lazy" // Lazy load image
+             loading="lazy"
            />
          )}
          <p className={`text-3xl sm:text-4xl md:text-5xl font-bold mt-1 sm:mt-2 animate-fadeInUp transition-transform duration-300 hover:scale-[1.03] ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{temp}°C</p>
@@ -94,7 +88,6 @@ function WeatherCard({ data, isDarkMode, onRefresh }) {
          <p className={`text-xs sm:text-sm mt-1 animate-fadeInUp transition-transform duration-300 hover:scale-[1.03] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Feels like {feelsLike}°C</p>
       </div>
 
-      {/* Detailed Info Grid */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 text-center text-xs sm:text-sm md:text-base mt-3 sm:mt-4">
         <div className={`p-2 sm:p-3 rounded-lg animate-fadeInLeft transition-all duration-300 hover:scale-[1.05] ${isDarkMode ? 'bg-gray-700 bg-opacity-50' : 'bg-gray-400 bg-opacity-20'}`}>
           <p className={`font-semibold mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Humidity</p>

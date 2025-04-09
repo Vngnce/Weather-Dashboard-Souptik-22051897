@@ -5,10 +5,9 @@ function WeatherForecast({ forecastData, isDarkMode }) {
     return null;
   }
 
-  // Group forecast data by day using ISO date string for consistent formatting
+  // Group forecast data by day
   const groupedForecast = forecastData.list.reduce((acc, item) => {
     const date = new Date(item.dt * 1000);
-    // Use ISO date string (YYYY-MM-DD) for consistent grouping
     const dayKey = date.toISOString().split('T')[0];
     
     if (!acc[dayKey]) {
@@ -19,10 +18,10 @@ function WeatherForecast({ forecastData, isDarkMode }) {
     return acc;
   }, {});
 
-  // Convert to array and sort by date
+  // Sort and limit to 5 days
   const forecastDays = Object.entries(groupedForecast)
     .sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB))
-    .slice(0, 5); // Only show 5 days
+    .slice(0, 5);
 
   // Format date for display
   const formatDate = (dateString) => {
@@ -39,13 +38,12 @@ function WeatherForecast({ forecastData, isDarkMode }) {
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
         {forecastDays.map(([dayKey, forecasts], index) => {
-          // Format the date for display
           const { dayName, dayDate } = formatDate(dayKey);
           
-          // Calculate average temperature for the day
+          // Calculate average temperature
           const avgTemp = forecasts.reduce((sum, item) => sum + item.main.temp, 0) / forecasts.length;
           
-          // Get the most common weather condition for the day
+          // Get most common weather condition
           const weatherCounts = forecasts.reduce((acc, item) => {
             const condition = item.weather[0].main;
             acc[condition] = (acc[condition] || 0) + 1;
@@ -55,7 +53,6 @@ function WeatherForecast({ forecastData, isDarkMode }) {
           const mostCommonWeather = Object.entries(weatherCounts)
             .sort(([, a], [, b]) => b - a)[0][0];
           
-          // Find the weather icon for the most common condition
           const weatherIcon = forecasts.find(item => 
             item.weather[0].main === mostCommonWeather
           )?.weather[0].icon;
